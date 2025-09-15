@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:17
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - /app/.venv
+    depends_on:
+      - db
+    env_file:
+      - .env
+    environment:
+      - PYTHONPATH=/app/src
+
+volumes:
+  postgres_data:
